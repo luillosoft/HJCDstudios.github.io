@@ -10,17 +10,43 @@ var channels = {
 }
 function SendMsg()
 {
-  document.getElementById( "ResponseFromServer" ).value = "";
+  id( "ResponseFromServer" ).value = "";
   var fd = new FormData();
-  fd.append( "username", document.getElementById( "MyName" ).value );
-  fd.append( "content", document.getElementById( "Message" ).value );// + "\n\n(" + btoa( navigator.userAgent ) + ")" );
+ 
+  if( !id( "AddPhoto" ).files[ 0 ] )
+  {
+    fd.append( "username", id( "MyName" ).value );
+    fd.append( "tts")
+    fd.append( "content", id( "Message" ).value );// + "\n\n(" + btoa( navigator.userAgent ) );
+  }
+  else
+  {
+    fd.append( "file1", id( "AddPhoto" ).files[ 0 ] );
+    fd.append( "payload_json", JSON.stringify(
+      {
+        "username": id( "MyName" ).value,
+        "embeds": [{
+          "title": id( "Message" ).value
+        }]
+      }
+    ));
+  }
+  
   var xhr = new XMLHttpRequest();
-  xhr.open( "POST", channels[ document.getElementById( "ToWhere" ).value ] + "?wait=true", true );
+  xhr.open( "POST", channels[ id( "ToWhere" ).value ] + "?wait=true", true );
   xhr.onreadystatechange = function()
   {
-    if ( xhr.readyState == 4 ) document.getElementById( "ResponseFromServer" ).value = "Status: " + xhr.status + "\nResponse:\n" + xhr.responseText;
+    if ( xhr.readyState == 4 )
+    {
+      id( "ResponseFromServer" ).value = "Status: " + xhr.status + "\nResponse:\n" + xhr.responseText;
+      id( "AddPhoto" ).value = null;
+    }
   };
   xhr.send( fd );
+}
+function id( a )
+{
+  return document.getElementById( a );
 }
 </script>
 <input type="text" placeholder="name" id="MyName" value="RandomHuman"/>
@@ -29,5 +55,7 @@ function SendMsg()
   <option value="general" selected>General</option>
   <option value="kitchen">Kitchen</option>
 </select><br/>
+<b>Add Photo: </b><input id="AddPhoto" type="file" accept="image/*" />
+<br/>
 <textarea rows="6" id="Message" placeholder="Content"></textarea><hr/>
 <textarea rows="10" id="ResponseFromServer" placeholder="Server Response"></textarea>
