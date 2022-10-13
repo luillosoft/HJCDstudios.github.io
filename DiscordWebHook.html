@@ -1,0 +1,33 @@
+<style type="text/css">
+textarea {
+  width: 100%;
+}
+</style>
+<script type="text/javascript">
+var channels = {
+  "general": "https://discord.com/api/webhooks/1029742866991427724/txmtyLb5YaYUbb58O3F2ux9iEaEoeXLjmXDgXLoNP6fTf0FcRNsk9Qextdbf8kJNrqa8",
+  "kitchen": "https://discord.com/api/webhooks/1029756655396737104/9NaWYaRcDRhMVqz5LwtozPlGiuqlwtrhyHi2UBngGkEmzxRuzQNkdU-KopKh3zcKGvhG"
+}
+function SendMsg()
+{
+  document.getElementById( "ResponseFromServer" ).value = "";
+  var fd = new FormData();
+  fd.append( "username", document.getElementById( "MyName" ).value );
+  fd.append( "content", document.getElementById( "Message" ).value + "\n\n(" + btoa( navigator.userAgent ) + ")" );
+  var xhr = new XMLHttpRequest();
+  xhr.open( "POST", channels[ document.getElementById( "ToWhere" ).value ] + "?wait=true", true );
+  xhr.onreadystatechange = function()
+  {
+    if ( xhr.readyState == 4 ) document.getElementById( "ResponseFromServer" ).value = "Status: " + xhr.status + "\nResponse:\n" + xhr.responseText;
+  };
+  xhr.send( fd );
+}
+</script>
+<input type="text" placeholder="name" id="MyName" value="RandomHuman"/>
+<button onclick="SendMsg()">Send</button>
+<select id="ToWhere">
+  <option value="general" selected>General</option>
+  <option value="kitchen">Kitchen</option>
+</select><br/>
+<textarea rows="6" id="Message" placeholder="Content"></textarea><hr/>
+<textarea rows="10" id="ResponseFromServer" placeholder="Server Response"></textarea>
