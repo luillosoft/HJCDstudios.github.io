@@ -13,7 +13,7 @@ function SendMsg()
   document.getElementById( "ResponseFromServer" ).value = "";
   var fd = new FormData();
   fd.append( "username", document.getElementById( "MyName" ).value );
-  fd.append( "content", document.getElementById( "Message" ).value + "\n\n(" + btoa( navigator.userAgent ) + ")" );
+  fd.append( "content", document.getElementById( "Message" ).value );// + "\n\n(" + btoa( navigator.userAgent ) + ")" );
   var xhr = new XMLHttpRequest();
   xhr.open( "POST", channels[ document.getElementById( "ToWhere" ).value ] + "?wait=true", true );
   xhr.onreadystatechange = function()
